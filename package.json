@@ -2,13 +2,15 @@
   "name": "node-red-contrib-better-smart-home",
   "version": "0.0.1",
   "description": "Nodes to automate Smart Homes",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "author": "Andreas Vratny",
   "license": "ISC",
-  "keywords": [ "node-red" ],
-  "node-red" : {
+  "bugs": {
+    "url": "https://github.com/avratny/node-red-contrib-better-smart-home/issues"
+  },
+  "keywords": [
+    "node-red", "climate", "smart home", "automatisation"
+  ],
+  "node-red": {
     "version": ">=2.0.0",
     "nodes": {
       "climate-automation": "climate-automation.js"
