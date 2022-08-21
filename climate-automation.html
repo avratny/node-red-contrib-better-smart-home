@@ -1,0 +1,148 @@
+<script type="text/javascript">
+    RED.nodes.registerType('climate-automation', {
+        category: 'Smart Home',
+        color: '#3FADB5',
+        defaults: {
+            name: {value: ""},
+            mode: {value: "manual"},
+            target_temperature: {value: 21, required: true, validate:RED.validators.number()},
+            check_minimal_outside_temperature: {value: false},
+            minimal_outside_temperature:  {value: 21, required: false, validate:RED.validators.number()},
+            offset: {value: 2, required: true, validate:RED.validators.number()},
+            timeout: {value: 15, required: true, validate:RED.validators.number()},
+            missing_value_action: {value: "off"},
+        },
+        inputs: 1,
+        outputs: 3,
+        inputLabels: "Data for climate control",
+        outputLabels: ["Change to ON","Change to OFF", "All Messages"],
+        icon: "font-awesome/fa-thermometer",
+        label: function () {
+            return this.name || "climate automation";
+        },
+        oneditprepare: function () {
+            $("#node-input-mode").typedInput({
+                types: [
+                    {
+                        value: "automatic",
+                        options: [
+                            {value: "manual", label: "manual"},
+                            {value: "automatic", label: "automatic"}
+                        ]
+                    }
+                ]
+            });
+            $("#node-input-missing_value_action").typedInput({
+                types: [
+                    {
+                        value: "off",
+                        options: [
+                            {value: "off", label: "Set climate to off"},
+                            {value: "on", label: "Set climate to on"}
+                        ]
+                    }
+                ]
+            });
+        }
+    });
+</script>
+
+
+
+<script type="text/html" data-template-name="climate-automation">
+    <div class="form-row">
+        <label for="node-input-name"><i class="fa fa-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+    <div class="form-row">
+        <label for="node-input-mode"><i class="fa fa-magic"></i> Mode</label>
+        <input type="text" id="node-input-mode">
+    </div>
+    <h2>Temperature Control</h2>
+    <div class="form-row">
+        <label for="node-input-target_temperature"><i class="fa fa-thermometer-empty"></i> Target temperature (°C or °F)</label>
+        <input type="number" id="node-input-target_temperature" placeholder="21">
+    </div>
+    <div class="form-row">
+        <label for="node-input-offset"><i class="fa fa-arrows-h"></i> Temperature offset (°C or °F)</label>
+        <input type="number" id="node-input-offset" placeholder="2">
+    </div>
+
+    <div class="form-row">
+        <label for="node-input-minimal_outside_temperature"><i class="fa fa-tree"></i> Minimal outside temperature (°C or °F)</label>
+        <input type="number" id="node-input-minimal_outside_temperature" placeholder="21">
+    </div>
+    <h2>Value invalidation</h2>
+    <div class="form-row">
+        <label for="node-input-timeout"><i class="fa fa-clock-o"></i> Invalidation time (minutes)</label>
+        <input type="number" id="node-input-timeout" placeholder="2">
+    </div>
+    <div class="form-row">
+        <label for="node-input-missing_value_action"><i class="fa fa-exclamation-triangle"></i> Missing value action</label>
+        <input type="text" id="node-input-missing_value_action">
+    </div>
+    <h2>Required values to check</h2>
+    <div class="form-row">
+        <input type="checkbox" id="node-input-check_target_temperature" style="margin-left:10px; vertical-align:top; width:auto;" autocomplete="off" checked disabled>
+        <label for="node-input-check_target_temperature" style="width:auto;">Check target temperature</label>
+    </div>
+    <div class="form-row">
+        <input type="checkbox" id="node-input-check_offset_temperature" style="margin-left:10px; vertical-align:top; width:auto;" autocomplete="off" checked disabled>
+        <label for="node-input-check_offset_temperature" style="width:auto;">Check offset temperature</label>
+    </div>
+    <div class="form-row">
+        <input type="checkbox" id="node-input-check_minimal_outside_temperature" style="margin-left:10px; vertical-align:top; width:auto;" autocomplete="off">
+        <label for="node-input-check_minimal_outside_temperature" style="width:auto;">Check outside temperature</label>
+    </div>
+</script>
+
+<script type="text/html" data-help-name="climate-automation">
+    <p>Automatic climate control by different conditions.</p>
+
+    <h3>Inputs</h3>
+    <dl class="message-properties">
+        <dt>payload
+            <span class="property-type">number | string</span>
+        </dt>
+        <dd> the value of the chosen topic. </dd>
+        <dt class="required">topic <span class="property-type">string</span></dt>
+        <dd> the value that should be updated for automation calculation.
+        Valid topics:
+        <ul>
+            <li>outside_temperature</li>
+            <li>current_temperature</li>
+        </ul>
+        </dd>
+    </dl>
+
+    <h3>Outputs</h3>
+    <ol class="node-ports">
+        <li>Standard output
+            <dl class="message-properties">
+                <dt>payload <span class="property-type">string</span></dt>
+                <dd>the standard output of the command.</dd>
+            </dl>
+        </li>
+        <li>Standard error
+            <dl class="message-properties">
+                <dt>payload <span class="property-type">string</span></dt>
+                <dd>the standard error of the command.</dd>
+            </dl>
+        </li>
+    </ol>
+
+    <h3>Details</h3>
+    <p><code>msg.payload</code> is used as the payload of the published message.
+        If it contains an Object it will be converted to a JSON string before being sent.
+        If it contains a binary Buffer the message will be published as-is.</p>
+    <p>The topic used can be configured in the node or, if left blank, can be set
+        by <code>msg.topic</code>.</p>
+    <p>Likewise the QoS and retain values can be configured in the node or, if left
+        blank, set by <code>msg.qos</code> and <code>msg.retain</code> respectively.</p>
+
+    <h3>References</h3>
+    <ul>
+        <li><a>Twitter API docs</a> - full description of <code>msg.tweet</code> property</li>
+        <li><a>GitHub</a> - the nodes github repository</li>
+    </ul>
+</script>
